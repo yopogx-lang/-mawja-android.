@@ -1,0 +1,15 @@
+{
+  "name": "موجة — قنواتك في مكان واحد",
+  "short_name": "موجة",
+  "description": "مكتبة شخصية تجمع فيديوهات قنواتك المفضلة في مكان واحد.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0d18",
+  "theme_color": "#0b0d18",
+  "icons": [
+    {"src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
