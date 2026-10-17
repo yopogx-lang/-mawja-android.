@@ -1,6 +1,6 @@
 /* Offline shell only. YouTube playback still requires internet. */
-const CACHE_NAME = 'mawja-shell-v1';
-const SHELL_URLS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
+const CACHE_NAME = 'halal-community-shell-v2';
+const SHELL_URLS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './community.css', './community.js'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL_URLS)).then(() => self.skipWaiting()));
