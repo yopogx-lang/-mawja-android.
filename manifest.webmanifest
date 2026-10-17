@@ -1,14 +1,14 @@
 {
-  "name": "موجة — قنواتك في مكان واحد",
-  "short_name": "موجة",
-  "description": "مكتبة شخصية تجمع فيديوهات قنواتك المفضلة في مكان واحد.",
+  "name": "Halal Community",
+  "short_name": "Halal",
+  "description": "ألعاب، قصص، موسيقى، أذكار وقراءة.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0b0d18",
-  "theme_color": "#0b0d18",
+  "background_color": "#090d17",
+  "theme_color": "#090d17",
   "icons": [
     {"src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
   ]
