@@ -21,7 +21,7 @@
 .bottom-nav .nav-item{min-width:0}.bottom-nav .nav-item span{white-space:nowrap}@media(max-width:420px){.bottom-nav{gap:0!important}.bottom-nav .nav-item{padding-inline:4px!important}.bottom-nav .nav-item span{font-size:10px!important}}
 
 
-/* Halal Community refinements: local story reader + audio-only player */
+/* Halal Community refinements: in-page audio-only player + live story catalogs */
 .hc-track{flex-wrap:wrap}
 .hc-track-meta{min-width:0;flex:1}
 .hc-track-play{border:1px solid rgba(100,234,209,.24);background:rgba(100,234,209,.09);color:var(--hc-teal);border-radius:10px;padding:8px 10px;font:inherit;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap}
