@@ -19,3 +19,30 @@
 @media(max-width:900px){.hc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hc-story-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hc-track-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hc-hero{grid-template-columns:minmax(0,1fr) 190px}}
 @media(max-width:620px){#communityHub{padding:5px 13px 120px}.hc-hero{grid-template-columns:1fr;padding:23px 20px;gap:5px;min-height:auto;border-radius:23px}.hc-hero-art{min-height:135px;order:-1}.hc-orbit{width:125px;height:125px;box-shadow:0 0 0 10px rgba(255,255,255,.025)}.hc-orbit:before{inset:15px}.hc-orbit:after{inset:30px}.hc-moon{left:16px;top:14px;width:15px;height:15px}.hc-core b{font-size:33px}.hc-core span{font-size:8px;margin-top:5px}.hc-title{font-size:36px;margin-top:12px}.hc-desc{font-size:13px}.hc-actions .hc-btn{flex:1}.hc-section{margin-top:30px}.hc-heading{font-size:20px}.hc-section-head{align-items:start}.hc-grid{grid-template-columns:1fr}.hc-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.hc-book{min-height:224px;padding:12px}.hc-book h3{font-size:13px}.hc-book .hc-btn{font-size:10px;padding:8px 9px}.hc-track-grid{grid-template-columns:1fr}.hc-spiritual-grid{grid-template-columns:1fr}.hc-hadith-list{grid-template-columns:1fr}.hc-memory-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hc-memory-tile{height:60px}.hc-choice-grid{grid-template-columns:1fr}.hc-quran-text{font-size:21px;line-height:2.2}.hc-article h3{font-size:25px}.hc-article p{font-size:13px}.hc-footer{align-items:start}.hc-count{display:none}}
 .bottom-nav .nav-item{min-width:0}.bottom-nav .nav-item span{white-space:nowrap}@media(max-width:420px){.bottom-nav{gap:0!important}.bottom-nav .nav-item{padding-inline:4px!important}.bottom-nav .nav-item span{font-size:10px!important}}
+
+
+/* Halal Community refinements: local story reader + audio-only player */
+.hc-track{flex-wrap:wrap}
+.hc-track-meta{min-width:0;flex:1}
+.hc-track-play{border:1px solid rgba(100,234,209,.24);background:rgba(100,234,209,.09);color:var(--hc-teal);border-radius:10px;padding:8px 10px;font:inherit;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap}
+.hc-track-play:hover,.hc-track-play:focus-visible{background:rgba(100,234,209,.16);border-color:rgba(100,234,209,.55)}
+.hc-audio-panel{min-width:0;border:1px solid var(--hc-line);border-radius:20px;padding:18px;background:linear-gradient(140deg,rgba(169,154,255,.12),rgba(100,234,209,.06)),#111a2a}
+.hc-audio-top{display:flex;align-items:center;gap:13px;margin-bottom:15px}
+.hc-audio-cover{width:54px;height:54px;flex:none;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#9b83ff,#55d9ca);color:#101827;font-size:27px;box-shadow:0 8px 24px rgba(100,234,209,.12)}
+.hc-audio-meta{min-width:0;display:flex;flex-direction:column;gap:6px}
+.hc-audio-meta strong{font-size:15px;line-height:1.6}
+.hc-audio-meta span,.hc-audio-note{font-size:11px;color:var(--hc-muted);line-height:1.8}
+.hc-audio-panel audio{display:block;width:100%;height:46px;margin:8px 0 14px;accent-color:var(--hc-teal)}
+.hc-audio-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.hc-audio-actions .hc-btn{margin-top:0}
+.hc-audio-note{margin-top:11px}
+.hc-reader-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(3,6,13,.84);backdrop-filter:blur(10px);padding:20px;overflow:auto;align-items:center;justify-content:center}
+.hc-reader-overlay.open{display:flex}
+.hc-reader-dialog{width:min(760px,100%);max-height:min(88vh,900px);overflow:auto;border:1px solid rgba(255,255,255,.13);border-radius:24px;background:linear-gradient(145deg,#172437,#101724 75%,#182d2d);padding:clamp(18px,4vw,32px);box-shadow:0 30px 90px rgba(0,0,0,.45)}
+.hc-reader-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hc-reader-dialog h2{font-size:clamp(23px,4vw,32px);line-height:1.5;margin:20px 0 16px}
+.hc-reader-body{font-family:system-ui,Tahoma,sans-serif;font-size:15px;line-height:2.15;color:#e1e8f0}
+.hc-reader-body p{margin:0 0 15px}
+.hc-reader-foot{margin-top:18px;padding-top:13px;border-top:1px solid var(--hc-line);font-size:11px;color:var(--hc-muted)}
+@media(max-width:760px){.hc-track-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hc-audio-panel{grid-column:1/-1!important}.hc-reader-overlay{padding:10px}.hc-reader-dialog{max-height:92vh;border-radius:18px}}
+@media(max-width:460px){.hc-track-grid{grid-template-columns:minmax(0,1fr)}.hc-track{padding:12px}.hc-track-play{width:100%}.hc-audio-actions .hc-btn{flex:1;justify-content:center}}
