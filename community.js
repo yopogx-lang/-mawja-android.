@@ -156,22 +156,13 @@ function renderDhikr(){document.getElementById('hcMorningList').innerHTML=dhikrD
 function readSurah(){var box=document.getElementById('hcSurahText');box.innerHTML='<div class="hc-loading">جارٍ تحميل نص سورة الملك من واجهة القرآن الكريم…</div>';fetch('https://api.quran.com/api/v4/quran/verses/uthmani?chapter_number=67').then(function(r){if(!r.ok)throw Error('quran');return r.json();}).then(function(d){if(!d.verses||!d.verses.length)throw Error('empty');box.innerHTML=d.verses.map(function(v,i){return '<span>'+esc(v.text_uthmani||v.text||'')+' <span class="hc-ayah-num">۞ '+(i+1)+'</span> </span>';}).join('');}).catch(function(){box.innerHTML='<div class="hc-loading">تعذّر تحميل النص الآن. افتح السورة من مصدرها الموثوق: <a style="color:var(--hc-teal)" href="https://quran.com/67" target="_blank" rel="noopener">سورة الملك على Quran.com ↗</a></div>';});}
 
 var HC_NOTES_KEY='halal_community_notes_v1',hcNotes=[],hcActiveNoteId=null,hcAiBusy=false;
-function hcLoadNotes(){try{var raw=JSON.parse(localStorage.getItem(HC_NOTES_KEY)||'[]');if(!Array.isArray(raw))return [];return raw.filter(function(n){return n&&typeof n.id==='string';}).map(function(n){return {id:n.id,title:String(n.title||'نوتة بدون عنوان'),body:String(n.body||''),updatedAt:Number(n.updatedAt)||Date.now(),chat:Array.isArray(n.chat)?n.chat.filter(function(m){return m&&['user','assistant'].includes(m.role)&&typeof m.content==='string';}).slice(-40):[]};});}catch(e){return [];}}
+function hcLoadNotes(){try{var raw=JSON.parse(localStorage.getItem(HC_NOTES_KEY)||'[]');if(!Array.isArray(raw))return [];return raw.filter(function(n){return n&&typeof n.id==='string';}).map(function(n){return {id:n.id,title:String(n.title||'نوتة بدون عنوان'),body:String(n.body||''),updatedAt:Number(n.updatedAt)||Date.now()};});}catch(e){return [];}}
 function hcStoreNotes(){try{localStorage.setItem(HC_NOTES_KEY,JSON.stringify(hcNotes));var state=document.getElementById('hcNoteSaveState');if(state)state.textContent='اتحفظت على الجهاز ✓';}catch(e){var state=document.getElementById('hcNoteSaveState');if(state)state.textContent='تعذر الحفظ؛ قد تكون مساحة التخزين ممتلئة.';}}
 function hcActiveNote(){return hcNotes.find(function(n){return n.id===hcActiveNoteId;})||null;}
 function hcNewId(){return 'n'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 function hcSyncEditor(){var n=hcActiveNote();if(!n)return;var title=document.getElementById('hcNoteTitle'),body=document.getElementById('hcNoteBody');if(title)n.title=title.value.trim()||'نوتة بدون عنوان';if(body)n.body=body.value;n.updatedAt=Date.now();hcStoreNotes();}
 function hcRenderNoteList(){var list=document.getElementById('hcNoteList');if(!list)return;if(!hcNotes.length){list.innerHTML='<div class="hc-notes-list-empty">مفيش نوتس لسه. اضغط «نوتة جديدة» للبدء.</div>';return;}list.innerHTML=hcNotes.slice().sort(function(a,b){return b.updatedAt-a.updatedAt;}).map(function(n){var active=n.id===hcActiveNoteId;return '<button class="hc-note-item'+(active?' active':'')+'" type="button" data-note-open="'+esc(n.id)+'"><strong>'+esc(n.title||'نوتة بدون عنوان')+'</strong><span>'+esc((n.body||'').replace(/\s+/g,' ').slice(0,76)||'نوتة فارغة')+'</span></button>';}).join('');}
-function hcRenderChat(){var box=document.getElementById('hcAiMessages'),n=hcActiveNote();if(!box)return;if(!n||!n.chat.length){box.innerHTML='<p class="hc-ai-empty">المحادثة خاصة بهذه النوتة. اسأل عن محتواها أو اطلب من المساعد كتابة مسودة.</p>';return;}box.innerHTML=n.chat.map(function(m,i){var isAI=m.role==='assistant';return '<article class="hc-ai-message '+(isAI?'assistant':'user')+'"><div class="hc-ai-role">'+(isAI?'المساعد الذكي':'أنت')+'</div><div class="hc-ai-text">'+esc(m.content)+'</div>'+(isAI?'<div class="hc-ai-use"><button type="button" class="hc-tab" data-ai-apply="'+i+'" data-ai-mode="append">أضف للنوتة</button><button type="button" class="hc-tab" data-ai-apply="'+i+'" data-ai-mode="replace">استبدل نص النوتة</button></div>':'')+'</article>';}).join('');box.scrollTop=box.scrollHeight;}
-function hcRenderNotes(){var editor=document.getElementById('hcNotesEditor'),empty=document.getElementById('hcNotesEmpty'),n=hcActiveNote();if(editor)editor.style.display=n?'block':'none';if(empty)empty.style.display=n?'none':'block';hcRenderNoteList();if(n){var title=document.getElementById('hcNoteTitle'),body=document.getElementById('hcNoteBody');if(title)title.value=n.title==='نوتة بدون عنوان'?'':n.title;if(body)body.value=n.body;hcRenderChat();}else{hcRenderChat();}var status=document.getElementById('hcAiStatus');if(status)status.textContent=window.puter?'المساعد متاح عند تسجيل الدخول؛ المحادثة مستقلة لكل نوتة.':'جارٍ تحميل مكتبة المساعد…';}
-function hcCreateNote(){if(hcActiveNote())hcSyncEditor();var n={id:hcNewId(),title:'نوتة جديدة',body:'',updatedAt:Date.now(),chat:[]};hcNotes.push(n);hcActiveNoteId=n.id;hcStoreNotes();hcRenderNotes();var title=document.getElementById('hcNoteTitle');if(title){title.focus();title.select();}}
-function hcSelectNote(id){if(hcActiveNote())hcSyncEditor();if(!hcNotes.some(function(n){return n.id===id;}))return;hcActiveNoteId=id;hcRenderNotes();}
-function hcDeleteNote(){var n=hcActiveNote();if(!n)return;if(!confirm('تحذف النوتة «'+n.title+'» ومحادثة المساعد الخاصة بها؟'))return;hcNotes=hcNotes.filter(function(x){return x.id!==n.id;});hcActiveNoteId=hcNotes.length?hcNotes.slice().sort(function(a,b){return b.updatedAt-a.updatedAt;})[0].id:null;hcStoreNotes();hcRenderNotes();}
-function hcSetAiStatus(s){var el=document.getElementById('hcAiStatus');if(el)el.textContent=s;}
-function hcExtractText(result){var v=result;if(typeof v==='string')return v;if(v&&v.message&&v.message.content!=null)v=v.message.content;else if(v&&v.choices&&v.choices[0]&&v.choices[0].message)v=v.choices[0].message.content;else if(v&&v.text!=null)v=v.text;if(Array.isArray(v))return v.map(function(x){return typeof x==='string'?x:(x.text||'');}).join('\n').trim();return typeof v==='string'?v:(v==null?'لم يُرجع المساعد نصًا.':JSON.stringify(v));}
-async function hcConnectAI(){if(!window.puter||!puter.auth){hcSetAiStatus('مكتبة المساعد لم تُحمّل. تأكد من الإنترنت ثم أعد تحميل الصفحة.');return;}try{hcSetAiStatus('جارٍ فتح تسجيل الدخول…');if(!puter.auth.isSignedIn())await puter.auth.signIn();var user=await puter.auth.getUser();hcSetAiStatus('تم الاتصال بالمساعد'+(user&&user.username?'، أهلًا '+user.username:'')+'.');}catch(e){hcSetAiStatus('لم يكتمل تسجيل الدخول. جرّب السماح بالنافذة المنبثقة أو أعد المحاولة.');}}
-async function hcAskAI(quickTask){if(hcAiBusy)return;var n=hcActiveNote();if(!n){hcSetAiStatus('أنشئ نوتة أولًا، ثم اسأل المساعد عنها.');return;}hcSyncEditor();var input=document.getElementById('hcAiPrompt'),question=String(quickTask||(input&&input.value)||'').trim();if(!question){hcSetAiStatus('اكتب سؤالك أو اختر مهمة سريعة بالأعلى.');if(input)input.focus();return;}if(!window.puter||!puter.ai||typeof puter.ai.chat!=='function'){hcSetAiStatus('مكتبة الذكاء الاصطناعي لم تُحمّل. تأكد من اتصال الإنترنت وأعد فتح الموقع.');return;}hcAiBusy=true;var ask=document.getElementById('hcAiAsk');if(ask){ask.disabled=true;ask.textContent='المساعد بيفكر…';}if(input)input.value='';n.chat.push({role:'user',content:question});n.chat=n.chat.slice(-40);hcStoreNotes();hcRenderChat();hcSetAiStatus('جارٍ تجهيز رد المساعد…');try{if(!puter.auth.isSignedIn())await puter.auth.signIn();var past=n.chat.slice(-9,-1).map(function(m){return {role:m.role,content:m.content};});var messages=[{role:'system',content:'أنت مساعد كتابة وتنظيم شخصي داخل Halal Community. أجب باللغة العربية ما لم يطلب المستخدم لغة أخرى. استند إلى نص النوتة ولا تخترع حقائق؛ ميّز الاقتراحات عن المعلومات الموجودة. ساعد في التلخيص وإعادة الصياغة والتخطيط وصنع المسودات. في المسائل الدينية، لا تصدر فتوى جازمة ولا تختلق آيات أو أحاديث، ووجّه إلى مصدر موثوق عند عدم التأكد.'},{role:'system',content:'عنوان النوتة الحالية: '+(n.title||'نوتة بدون عنوان')+'\nمحتوى النوتة الحالية:\n'+(n.body||'(النوتة فارغة حتى الآن)')}].concat(past,[{role:'user',content:question}]);var result=await puter.ai.chat(messages);var reply=hcExtractText(result).trim();if(!reply)throw Error('empty response');n.chat.push({role:'assistant',content:reply});n.chat=n.chat.slice(-40);hcStoreNotes();hcRenderChat();hcSetAiStatus('وصل رد المساعد. تقدر تضيفه للنوتة أو تستبدل النص به.');}catch(e){var msg=String(e&&e.message||e||'');hcSetAiStatus(/402|insufficient|credit|payment|quota/i.test(msg)?'قد تكون الحصة المجانية أو الرصيد غير كافٍ لهذا الطلب؛ راجع حساب Puter.':'تعذر الحصول على رد الآن. تحقق من الاتصال وتسجيل الدخول، ثم جرّب مجددًا.');}finally{hcAiBusy=false;if(ask){ask.disabled=false;ask.textContent='اسأل المساعد ←';}}}
-function hcApplyAI(index,mode){var n=hcActiveNote();if(!n)return;var m=n.chat[Number(index)];if(!m||m.role!=='assistant')return;hcSyncEditor();var body=document.getElementById('hcNoteBody');if(!body)return;if(mode==='replace'){if(!confirm('استبدال محتوى النوتة بالكامل برد المساعد؟'))return;body.value=m.content;}else{body.value=(body.value.trim()?body.value.trim()+'\n\n':'')+m.content;}n.body=body.value;n.updatedAt=Date.now();hcStoreNotes();hcRenderNoteList();body.focus();toast(mode==='replace'?'تم استبدال نص النوتة':'تمت إضافة رد المساعد للنوتة');}
+function hcRenderNotes(){var editor=document.getElementById('hcNotesEditor'),empty=document.getElementById('hcNotesEmpty'),n=hcActiveNote();if(editor)editor.style.display=n?'block':'none';if(empty)empty.style.display=n?'none':'block';hcRenderNoteList();if(n){var title=document.getElementById('hcNoteTitle'),body=document.getElementById('hcNoteBody');if(title)title.value=n.title==='نوتة بدون عنوان'?'':n.title;if(body)body.value=n.body;}}
 function hcInitNotes(){hcNotes=hcLoadNotes();hcActiveNoteId=hcNotes.length?hcNotes.slice().sort(function(a,b){return b.updatedAt-a.updatedAt;})[0].id:null;hcRenderNotes();}
 function hcHandleNoteInput(target){var n=hcActiveNote();if(!n)return;if(target.id==='hcNoteTitle')n.title=target.value.trim()||'نوتة بدون عنوان';if(target.id==='hcNoteBody')n.body=target.value;n.updatedAt=Date.now();hcStoreNotes();hcRenderNoteList();}
 
@@ -181,30 +172,22 @@ root.innerHTML=`
   <div class="hc-hero-copy">
     <div class="hc-kicker">HALAL COMMUNITY · مساحة شخصية</div>
     <h1 class="hc-title">مكانك للذكر<br><span>والتعلّم والكتابة</span></h1>
-    <p class="hc-desc">مساحة هادئة تجمع قنواتك، والقرآن والأذكار والأحاديث، ونوتس خاصة متصلة بمساعد ذكاء اصطناعي يساعدك في الكتابة والتلخيص وتنظيم أفكارك.</p>
+    <p class="hc-desc">مساحة هادئة تجمع قنواتك، والقرآن والأذكار والأحاديث، ونوتس خاصة تحتفظ بأفكارك وملاحظاتك على جهازك.</p>
     <div class="hc-actions"><a class="hc-btn primary" href="#hcNotes">افتح النوتس ✎</a><a class="hc-btn purple" href="#hcSpiritual">الأذكار والقرآن ☾</a><button class="hc-btn" id="hcOpenChannels" type="button">افتح القنوات ↗</button></div>
-    <div class="hc-pill-row"><span class="hc-pill">✦ نوتس تُحفظ على جهازك</span><span class="hc-pill">✦ مساعد AI لكل نوتة</span><span class="hc-pill">✦ قرآن وأذكار وأحاديث</span></div>
+    <div class="hc-pill-row"><span class="hc-pill">✦ نوتس تُحفظ على جهازك</span><span class="hc-pill">✦ نوتس لأفكارك</span><span class="hc-pill">✦ قرآن وأذكار وأحاديث</span></div>
   </div><div class="hc-hero-art"><div class="hc-orbit"><div class="hc-moon"></div><div class="hc-core"><b>☾</b><span>WRITE · REFLECT · GROW</span></div></div></div>
 </section>
 <nav class="hc-jumpbar" aria-label="أقسام المجتمع"><a href="#hcNotes">✎ النوتس والمساعد</a><a href="#hcSpiritual">☾ الأذكار والقرآن</a><a href="#hcHadith">📜 الأحاديث</a><a href="#hcChannels" id="hcJumpChannels">▶ القنوات</a></nav>
 <section class="hc-section" id="hcNotes">
-  <div class="hc-section-head"><div><h2 class="hc-heading">دفتر النوتس الذكي ✎</h2><div class="hc-sub">أنشئ نوتة لكل فكرة أو درس أو مشروع. كل نوتة لها محادثة AI خاصة مرتبطة بعنوانها ومحتواها.</div></div><span class="hc-count">NOTES + AI</span></div>
+  <div class="hc-section-head"><div><h2 class="hc-heading">دفتر النوتس ✎</h2><div class="hc-sub">اكتب أفكارك وملاحظاتك ودروسك، ورتبها في نوتات منفصلة.</div></div><span class="hc-count">NOTES</span></div>
   <div class="hc-notes-layout">
-    <aside class="hc-notes-sidebar"><button class="hc-btn primary hc-note-new" id="hcNoteNew" type="button">＋ نوتة جديدة</button><div class="hc-notes-list" id="hcNoteList"></div><p class="hc-mini-note">النوتس والمحادثات محفوظة محليًا على هذا الجهاز والمتصفح.</p></aside>
+    <aside class="hc-notes-sidebar"><button class="hc-btn primary hc-note-new" id="hcNoteNew" type="button">＋ نوتة جديدة</button><div class="hc-notes-list" id="hcNoteList"></div><p class="hc-mini-note">النوتس محفوظة على هذا الجهاز والمتصفح فقط.</p></aside>
     <div class="hc-notes-main">
-      <div class="hc-card hc-notes-empty" id="hcNotesEmpty"><div class="hc-icon">✎</div><h3>ابدأ بنوتة جديدة</h3><p>اكتب ملاحظاتك، ثم اسأل المساعد عنها أو اطلب منه كتابة مسودة أو تلخيص.</p><button class="hc-btn primary" id="hcNoteNewEmpty" type="button">إنشاء أول نوتة</button></div>
+      <div class="hc-card hc-notes-empty" id="hcNotesEmpty"><div class="hc-icon">✎</div><h3>ابدأ بنوتة جديدة</h3><p>اكتب ملاحظاتك، درسًا، فكرة، خطة، أو أي شيء تحب ترجع له.</p><button class="hc-btn primary" id="hcNoteNewEmpty" type="button">إنشاء أول نوتة</button></div>
       <div class="hc-notes-editor" id="hcNotesEditor" style="display:none">
         <div class="hc-note-title-row"><input id="hcNoteTitle" class="hc-input hc-note-title" maxlength="160" placeholder="عنوان النوتة"><button class="hc-btn danger" id="hcNoteDelete" type="button">حذف</button></div>
         <textarea id="hcNoteBody" class="hc-input hc-note-body" placeholder="اكتب ملاحظاتك هنا…&#10;&#10;تقدر تكتب درس، فكرة، خطة، أو أي شيء تحب ترجع له." rows="9"></textarea>
         <div class="hc-note-toolbar"><span id="hcNoteSaveState" class="hc-mini-note">يُحفظ تلقائيًا</span><button class="hc-btn" id="hcNoteSave" type="button">حفظ الآن ✓</button></div>
-        <section class="hc-ai-panel" aria-label="مساعد الذكاء الاصطناعي للنوتة">
-          <div class="hc-ai-heading"><div><span class="hc-ai-eyebrow">PERSONAL AI AGENT</span><h3>مساعد النوتة الذكي ✦</h3><p>يفهم النوتة الحالية ويساعدك تكتب وتراجع وتنظم.</p></div><button class="hc-btn small" id="hcAiLogin" type="button">تسجيل الدخول للمساعد</button></div>
-          <div class="hc-ai-privacy">تسجيل الدخول عبر Puter مطلوب للذكاء الاصطناعي. عند السؤال، يُرسل عنوان النوتة ومحتواها والطلب إلى خدمة AI. تتوفر حصة مجانية للحساب، وقد تصبح بعض الاستخدامات مدفوعة بعد انتهاء الحصة.</div>
-          <div class="hc-ai-quick-actions"><button class="hc-tab" data-ai-quick="لخّص محتوى هذه النوتة في نقاط واضحة، من دون اختراع معلومات." type="button">تلخيص النوتة</button><button class="hc-tab" data-ai-quick="راجع صياغة النوتة وحسّن الوضوح والتنظيم مع الحفاظ على المعنى." type="button">تحسين الصياغة</button><button class="hc-tab" data-ai-quick="حوّل محتوى النوتة إلى قائمة مهام عملية مرتبة بالأولوية." type="button">استخراج المهام</button><button class="hc-tab" data-ai-quick="اقترح أفكارًا وخطوات تالية مناسبة لهذه النوتة، وميّز بين ما هو موجود وما تقترحه." type="button">أفكار وخطوات تالية</button></div>
-          <div class="hc-ai-messages" id="hcAiMessages" aria-live="polite"><p class="hc-ai-empty">ابدأ بسؤال المساعد عن النوتة، أو اختر مهمة سريعة بالأعلى.</p></div>
-          <div class="hc-ai-compose"><textarea id="hcAiPrompt" class="hc-input" rows="3" placeholder="اسأل عن النوتة أو اطلب كتابة شيء…"></textarea><button class="hc-btn primary" id="hcAiAsk" type="button">اسأل المساعد ←</button></div>
-          <div id="hcAiStatus" class="hc-mini-note" aria-live="polite">المساعد يحتاج اتصال إنترنت وحساب Puter.</div>
-        </section>
       </div>
     </div>
   </div>
@@ -220,7 +203,7 @@ root.innerHTML=`
   <div class="hc-hadith-tools"><input class="hc-input" id="hcHadithSearch" placeholder="ابحث في نص الحديث أو المصدر…"><button class="hc-btn" id="hcHadithClear" type="button">عرض الكل ↻</button></div><div class="hc-hadith-list" id="hcHadithList"></div>
 </section>
 <section class="hc-section" id="hcChannels"><div class="hc-card hc-channels-card"><div class="hc-card-top"><div><h2 class="hc-heading">قنواتك ومكتبة الفيديوهات ▶</h2><div class="hc-sub">القنوات والمحفوظات والمشغّل الأصلي متاحون من تبويبات الموقع الرئيسية.</div></div><div class="hc-icon">▶</div></div><div class="hc-actions"><button class="hc-btn primary" id="hcOpenChannelsBottom" type="button">افتح القنوات ↗</button><button class="hc-btn" id="hcOpenVideos" type="button">افتح مكتبة الفيديوهات ↗</button></div></div></section>
-<footer class="hc-footer"><span>Halal Community · نوتس وذكر وقنوات</span><span>النوتس على هذا الجهاز؛ مساعد AI يتطلب إنترنت وحساب Puter.</span></footer>
+<footer class="hc-footer"><span>Halal Community · نوتس وذكر وقنوات</span><span>النوتس محفوظة على هذا الجهاز والمتصفح.</span></footer>
 `;
 
 var nav=document.querySelector('.bottom-nav');if(nav&&!nav.querySelector('[data-hubnav]'))nav.insertAdjacentHTML('beforeend','<button class="nav-item" data-hubnav="true" aria-label="Halal Community"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5A7 7 0 0 1 12 3.5Z"/><path d="m17.5 2 .8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8Z"/></svg><span>المجتمع</span></button>');
@@ -231,30 +214,22 @@ root.innerHTML=`
   <div class="hc-hero-copy">
     <div class="hc-kicker">HALAL COMMUNITY · مساحة شخصية</div>
     <h1 class="hc-title">مكانك للذكر<br><span>والتعلّم والكتابة</span></h1>
-    <p class="hc-desc">مساحة هادئة تجمع قنواتك، والقرآن والأذكار والأحاديث، ونوتس خاصة متصلة بمساعد ذكاء اصطناعي يساعدك في الكتابة والتلخيص وتنظيم أفكارك.</p>
+    <p class="hc-desc">مساحة هادئة تجمع قنواتك، والقرآن والأذكار والأحاديث، ونوتس خاصة تحتفظ بأفكارك وملاحظاتك على جهازك.</p>
     <div class="hc-actions"><a class="hc-btn primary" href="#hcNotes">افتح النوتس ✎</a><a class="hc-btn purple" href="#hcSpiritual">الأذكار والقرآن ☾</a><button class="hc-btn" id="hcOpenChannels" type="button">افتح القنوات ↗</button></div>
-    <div class="hc-pill-row"><span class="hc-pill">✦ نوتس تُحفظ على جهازك</span><span class="hc-pill">✦ مساعد AI لكل نوتة</span><span class="hc-pill">✦ قرآن وأذكار وأحاديث</span></div>
+    <div class="hc-pill-row"><span class="hc-pill">✦ نوتس تُحفظ على جهازك</span><span class="hc-pill">✦ نوتس لأفكارك</span><span class="hc-pill">✦ قرآن وأذكار وأحاديث</span></div>
   </div><div class="hc-hero-art"><div class="hc-orbit"><div class="hc-moon"></div><div class="hc-core"><b>☾</b><span>WRITE · REFLECT · GROW</span></div></div></div>
 </section>
 <nav class="hc-jumpbar" aria-label="أقسام المجتمع"><a href="#hcNotes">✎ النوتس والمساعد</a><a href="#hcSpiritual">☾ الأذكار والقرآن</a><a href="#hcHadith">📜 الأحاديث</a><a href="#hcChannels" id="hcJumpChannels">▶ القنوات</a></nav>
 <section class="hc-section" id="hcNotes">
-  <div class="hc-section-head"><div><h2 class="hc-heading">دفتر النوتس الذكي ✎</h2><div class="hc-sub">أنشئ نوتة لكل فكرة أو درس أو مشروع. كل نوتة لها محادثة AI خاصة مرتبطة بعنوانها ومحتواها.</div></div><span class="hc-count">NOTES + AI</span></div>
+  <div class="hc-section-head"><div><h2 class="hc-heading">دفتر النوتس ✎</h2><div class="hc-sub">اكتب أفكارك وملاحظاتك ودروسك، ورتبها في نوتات منفصلة.</div></div><span class="hc-count">NOTES</span></div>
   <div class="hc-notes-layout">
-    <aside class="hc-notes-sidebar"><button class="hc-btn primary hc-note-new" id="hcNoteNew" type="button">＋ نوتة جديدة</button><div class="hc-notes-list" id="hcNoteList"></div><p class="hc-mini-note">النوتس والمحادثات محفوظة محليًا على هذا الجهاز والمتصفح.</p></aside>
+    <aside class="hc-notes-sidebar"><button class="hc-btn primary hc-note-new" id="hcNoteNew" type="button">＋ نوتة جديدة</button><div class="hc-notes-list" id="hcNoteList"></div><p class="hc-mini-note">النوتس محفوظة على هذا الجهاز والمتصفح فقط.</p></aside>
     <div class="hc-notes-main">
-      <div class="hc-card hc-notes-empty" id="hcNotesEmpty"><div class="hc-icon">✎</div><h3>ابدأ بنوتة جديدة</h3><p>اكتب ملاحظاتك، ثم اسأل المساعد عنها أو اطلب منه كتابة مسودة أو تلخيص.</p><button class="hc-btn primary" id="hcNoteNewEmpty" type="button">إنشاء أول نوتة</button></div>
+      <div class="hc-card hc-notes-empty" id="hcNotesEmpty"><div class="hc-icon">✎</div><h3>ابدأ بنوتة جديدة</h3><p>اكتب ملاحظاتك، درسًا، فكرة، خطة، أو أي شيء تحب ترجع له.</p><button class="hc-btn primary" id="hcNoteNewEmpty" type="button">إنشاء أول نوتة</button></div>
       <div class="hc-notes-editor" id="hcNotesEditor" style="display:none">
         <div class="hc-note-title-row"><input id="hcNoteTitle" class="hc-input hc-note-title" maxlength="160" placeholder="عنوان النوتة"><button class="hc-btn danger" id="hcNoteDelete" type="button">حذف</button></div>
         <textarea id="hcNoteBody" class="hc-input hc-note-body" placeholder="اكتب ملاحظاتك هنا…&#10;&#10;تقدر تكتب درس، فكرة، خطة، أو أي شيء تحب ترجع له." rows="9"></textarea>
         <div class="hc-note-toolbar"><span id="hcNoteSaveState" class="hc-mini-note">يُحفظ تلقائيًا</span><button class="hc-btn" id="hcNoteSave" type="button">حفظ الآن ✓</button></div>
-        <section class="hc-ai-panel" aria-label="مساعد الذكاء الاصطناعي للنوتة">
-          <div class="hc-ai-heading"><div><span class="hc-ai-eyebrow">PERSONAL AI AGENT</span><h3>مساعد النوتة الذكي ✦</h3><p>يفهم النوتة الحالية ويساعدك تكتب وتراجع وتنظم.</p></div><button class="hc-btn small" id="hcAiLogin" type="button">تسجيل الدخول للمساعد</button></div>
-          <div class="hc-ai-privacy">تسجيل الدخول عبر Puter مطلوب للذكاء الاصطناعي. عند السؤال، يُرسل عنوان النوتة ومحتواها والطلب إلى خدمة AI. تتوفر حصة مجانية للحساب، وقد تصبح بعض الاستخدامات مدفوعة بعد انتهاء الحصة.</div>
-          <div class="hc-ai-quick-actions"><button class="hc-tab" data-ai-quick="لخّص محتوى هذه النوتة في نقاط واضحة، من دون اختراع معلومات." type="button">تلخيص النوتة</button><button class="hc-tab" data-ai-quick="راجع صياغة النوتة وحسّن الوضوح والتنظيم مع الحفاظ على المعنى." type="button">تحسين الصياغة</button><button class="hc-tab" data-ai-quick="حوّل محتوى النوتة إلى قائمة مهام عملية مرتبة بالأولوية." type="button">استخراج المهام</button><button class="hc-tab" data-ai-quick="اقترح أفكارًا وخطوات تالية مناسبة لهذه النوتة، وميّز بين ما هو موجود وما تقترحه." type="button">أفكار وخطوات تالية</button></div>
-          <div class="hc-ai-messages" id="hcAiMessages" aria-live="polite"><p class="hc-ai-empty">ابدأ بسؤال المساعد عن النوتة، أو اختر مهمة سريعة بالأعلى.</p></div>
-          <div class="hc-ai-compose"><textarea id="hcAiPrompt" class="hc-input" rows="3" placeholder="اسأل عن النوتة أو اطلب كتابة شيء…"></textarea><button class="hc-btn primary" id="hcAiAsk" type="button">اسأل المساعد ←</button></div>
-          <div id="hcAiStatus" class="hc-mini-note" aria-live="polite">المساعد يحتاج اتصال إنترنت وحساب Puter.</div>
-        </section>
       </div>
     </div>
   </div>
@@ -270,7 +245,7 @@ root.innerHTML=`
   <div class="hc-hadith-tools"><input class="hc-input" id="hcHadithSearch" placeholder="ابحث في نص الحديث أو المصدر…"><button class="hc-btn" id="hcHadithClear" type="button">عرض الكل ↻</button></div><div class="hc-hadith-list" id="hcHadithList"></div>
 </section>
 <section class="hc-section" id="hcChannels"><div class="hc-card hc-channels-card"><div class="hc-card-top"><div><h2 class="hc-heading">قنواتك ومكتبة الفيديوهات ▶</h2><div class="hc-sub">القنوات والمحفوظات والمشغّل الأصلي متاحون من تبويبات الموقع الرئيسية.</div></div><div class="hc-icon">▶</div></div><div class="hc-actions"><button class="hc-btn primary" id="hcOpenChannelsBottom" type="button">افتح القنوات ↗</button><button class="hc-btn" id="hcOpenVideos" type="button">افتح مكتبة الفيديوهات ↗</button></div></div></section>
-<footer class="hc-footer"><span>Halal Community · نوتس وذكر وقنوات</span><span>النوتس على هذا الجهاز؛ مساعد AI يتطلب إنترنت وحساب Puter.</span></footer>
+<footer class="hc-footer"><span>Halal Community · نوتس وذكر وقنوات</span><span>النوتس محفوظة على هذا الجهاز والمتصفح.</span></footer>
 `;
 
 var nav=document.querySelector('.bottom-nav');if(nav&&!nav.querySelector('[data-hubnav]'))nav.insertAdjacentHTML('beforeend','<button class="nav-item" data-hubnav="true" aria-label="Halal Community"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5A7 7 0 0 1 12 3.5Z"/><path d="m17.5 2 .8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8Z"/></svg><span>المجتمع</span></button>');
@@ -282,30 +257,22 @@ root.innerHTML=`
   <div class="hc-hero-copy">
     <div class="hc-kicker">HALAL COMMUNITY · مساحة شخصية</div>
     <h1 class="hc-title">مكانك للذكر<br><span>والتعلّم والكتابة</span></h1>
-    <p class="hc-desc">مساحة هادئة تجمع قنواتك، والقرآن والأذكار والأحاديث، ونوتس خاصة متصلة بمساعد ذكاء اصطناعي يساعدك في الكتابة والتلخيص وتنظيم أفكارك.</p>
+    <p class="hc-desc">مساحة هادئة تجمع قنواتك، والقرآن والأذكار والأحاديث، ونوتس خاصة تحتفظ بأفكارك وملاحظاتك على جهازك.</p>
     <div class="hc-actions"><a class="hc-btn primary" href="#hcNotes">افتح النوتس ✎</a><a class="hc-btn purple" href="#hcSpiritual">الأذكار والقرآن ☾</a><button class="hc-btn" id="hcOpenChannels" type="button">افتح القنوات ↗</button></div>
-    <div class="hc-pill-row"><span class="hc-pill">✦ نوتس تُحفظ على جهازك</span><span class="hc-pill">✦ مساعد AI لكل نوتة</span><span class="hc-pill">✦ قرآن وأذكار وأحاديث</span></div>
+    <div class="hc-pill-row"><span class="hc-pill">✦ نوتس تُحفظ على جهازك</span><span class="hc-pill">✦ نوتس لأفكارك</span><span class="hc-pill">✦ قرآن وأذكار وأحاديث</span></div>
   </div><div class="hc-hero-art"><div class="hc-orbit"><div class="hc-moon"></div><div class="hc-core"><b>☾</b><span>WRITE · REFLECT · GROW</span></div></div></div>
 </section>
 <nav class="hc-jumpbar" aria-label="أقسام المجتمع"><a href="#hcNotes">✎ النوتس والمساعد</a><a href="#hcSpiritual">☾ الأذكار والقرآن</a><a href="#hcHadith">📜 الأحاديث</a><a href="#hcChannels" id="hcJumpChannels">▶ القنوات</a></nav>
 <section class="hc-section" id="hcNotes">
-  <div class="hc-section-head"><div><h2 class="hc-heading">دفتر النوتس الذكي ✎</h2><div class="hc-sub">أنشئ نوتة لكل فكرة أو درس أو مشروع. كل نوتة لها محادثة AI خاصة مرتبطة بعنوانها ومحتواها.</div></div><span class="hc-count">NOTES + AI</span></div>
+  <div class="hc-section-head"><div><h2 class="hc-heading">دفتر النوتس ✎</h2><div class="hc-sub">اكتب أفكارك وملاحظاتك ودروسك، ورتبها في نوتات منفصلة.</div></div><span class="hc-count">NOTES</span></div>
   <div class="hc-notes-layout">
-    <aside class="hc-notes-sidebar"><button class="hc-btn primary hc-note-new" id="hcNoteNew" type="button">＋ نوتة جديدة</button><div class="hc-notes-list" id="hcNoteList"></div><p class="hc-mini-note">النوتس والمحادثات محفوظة محليًا على هذا الجهاز والمتصفح.</p></aside>
+    <aside class="hc-notes-sidebar"><button class="hc-btn primary hc-note-new" id="hcNoteNew" type="button">＋ نوتة جديدة</button><div class="hc-notes-list" id="hcNoteList"></div><p class="hc-mini-note">النوتس محفوظة على هذا الجهاز والمتصفح فقط.</p></aside>
     <div class="hc-notes-main">
-      <div class="hc-card hc-notes-empty" id="hcNotesEmpty"><div class="hc-icon">✎</div><h3>ابدأ بنوتة جديدة</h3><p>اكتب ملاحظاتك، ثم اسأل المساعد عنها أو اطلب منه كتابة مسودة أو تلخيص.</p><button class="hc-btn primary" id="hcNoteNewEmpty" type="button">إنشاء أول نوتة</button></div>
+      <div class="hc-card hc-notes-empty" id="hcNotesEmpty"><div class="hc-icon">✎</div><h3>ابدأ بنوتة جديدة</h3><p>اكتب ملاحظاتك، درسًا، فكرة، خطة، أو أي شيء تحب ترجع له.</p><button class="hc-btn primary" id="hcNoteNewEmpty" type="button">إنشاء أول نوتة</button></div>
       <div class="hc-notes-editor" id="hcNotesEditor" style="display:none">
         <div class="hc-note-title-row"><input id="hcNoteTitle" class="hc-input hc-note-title" maxlength="160" placeholder="عنوان النوتة"><button class="hc-btn danger" id="hcNoteDelete" type="button">حذف</button></div>
         <textarea id="hcNoteBody" class="hc-input hc-note-body" placeholder="اكتب ملاحظاتك هنا…&#10;&#10;تقدر تكتب درس، فكرة، خطة، أو أي شيء تحب ترجع له." rows="9"></textarea>
         <div class="hc-note-toolbar"><span id="hcNoteSaveState" class="hc-mini-note">يُحفظ تلقائيًا</span><button class="hc-btn" id="hcNoteSave" type="button">حفظ الآن ✓</button></div>
-        <section class="hc-ai-panel" aria-label="مساعد الذكاء الاصطناعي للنوتة">
-          <div class="hc-ai-heading"><div><span class="hc-ai-eyebrow">PERSONAL AI AGENT</span><h3>مساعد النوتة الذكي ✦</h3><p>يفهم النوتة الحالية ويساعدك تكتب وتراجع وتنظم.</p></div><button class="hc-btn small" id="hcAiLogin" type="button">تسجيل الدخول للمساعد</button></div>
-          <div class="hc-ai-privacy">تسجيل الدخول عبر Puter مطلوب للذكاء الاصطناعي. عند السؤال، يُرسل عنوان النوتة ومحتواها والطلب إلى خدمة AI. تتوفر حصة مجانية للحساب، وقد تصبح بعض الاستخدامات مدفوعة بعد انتهاء الحصة.</div>
-          <div class="hc-ai-quick-actions"><button class="hc-tab" data-ai-quick="لخّص محتوى هذه النوتة في نقاط واضحة، من دون اختراع معلومات." type="button">تلخيص النوتة</button><button class="hc-tab" data-ai-quick="راجع صياغة النوتة وحسّن الوضوح والتنظيم مع الحفاظ على المعنى." type="button">تحسين الصياغة</button><button class="hc-tab" data-ai-quick="حوّل محتوى النوتة إلى قائمة مهام عملية مرتبة بالأولوية." type="button">استخراج المهام</button><button class="hc-tab" data-ai-quick="اقترح أفكارًا وخطوات تالية مناسبة لهذه النوتة، وميّز بين ما هو موجود وما تقترحه." type="button">أفكار وخطوات تالية</button></div>
-          <div class="hc-ai-messages" id="hcAiMessages" aria-live="polite"><p class="hc-ai-empty">ابدأ بسؤال المساعد عن النوتة، أو اختر مهمة سريعة بالأعلى.</p></div>
-          <div class="hc-ai-compose"><textarea id="hcAiPrompt" class="hc-input" rows="3" placeholder="اسأل عن النوتة أو اطلب كتابة شيء…"></textarea><button class="hc-btn primary" id="hcAiAsk" type="button">اسأل المساعد ←</button></div>
-          <div id="hcAiStatus" class="hc-mini-note" aria-live="polite">المساعد يحتاج اتصال إنترنت وحساب Puter.</div>
-        </section>
       </div>
     </div>
   </div>
@@ -321,7 +288,7 @@ root.innerHTML=`
   <div class="hc-hadith-tools"><input class="hc-input" id="hcHadithSearch" placeholder="ابحث في نص الحديث أو المصدر…"><button class="hc-btn" id="hcHadithClear" type="button">عرض الكل ↻</button></div><div class="hc-hadith-list" id="hcHadithList"></div>
 </section>
 <section class="hc-section" id="hcChannels"><div class="hc-card hc-channels-card"><div class="hc-card-top"><div><h2 class="hc-heading">قنواتك ومكتبة الفيديوهات ▶</h2><div class="hc-sub">القنوات والمحفوظات والمشغّل الأصلي متاحون من تبويبات الموقع الرئيسية.</div></div><div class="hc-icon">▶</div></div><div class="hc-actions"><button class="hc-btn primary" id="hcOpenChannelsBottom" type="button">افتح القنوات ↗</button><button class="hc-btn" id="hcOpenVideos" type="button">افتح مكتبة الفيديوهات ↗</button></div></div></section>
-<footer class="hc-footer"><span>Halal Community · نوتس وذكر وقنوات</span><span>النوتس على هذا الجهاز؛ مساعد AI يتطلب إنترنت وحساب Puter.</span></footer>
+<footer class="hc-footer"><span>Halal Community · نوتس وذكر وقنوات</span><span>النوتس محفوظة على هذا الجهاز والمتصفح.</span></footer>
 `;
 function refreshCounts(){document.querySelectorAll('[id$="count"]').forEach(function(e){var d=dhikrData.find(function(x){return e.id===x.id+'count';});if(d)e.textContent=(dhikrCounts[d.id]||0)+' / '+d.count;});}
 var nav=document.querySelector('.bottom-nav');if(nav&&!nav.querySelector('[data-hubnav]'))nav.insertAdjacentHTML('beforeend','<button class="nav-item" data-hubnav="true" aria-label="Halal Community"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5A7 7 0 0 1 12 3.5Z"/><path d="m17.5 2 .8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8Z"/></svg><span>المجتمع</span></button>');
@@ -336,10 +303,10 @@ document.addEventListener('click',function(e){
  target=e.target.closest('[data-note-open]');if(target){hcSelectNote(target.dataset.noteOpen);return;}
  if(e.target.closest('#hcNoteSave')){hcSyncEditor();hcRenderNoteList();toast('تم حفظ النوتة على هذا الجهاز');return;}
  if(e.target.closest('#hcNoteDelete')){hcDeleteNote();return;}
- if(e.target.closest('#hcAiLogin')){hcConnectAI();return;}
- if(e.target.closest('#hcAiAsk')){hcAskAI();return;}
- target=e.target.closest('[data-ai-quick]');if(target){hcAskAI(target.dataset.aiQuick);return;}
- target=e.target.closest('[data-ai-apply]');if(target){hcApplyAI(target.dataset.aiApply,target.dataset.aiMode||'append');return;}
+
+
+
+
  if(e.target.closest('#hcHadithClear')){hadithFilter='';var search=document.getElementById('hcHadithSearch');if(search)search.value='';renderHadiths();return;}
  if(e.target.closest('#hcReloadSurah')){readSurah();return;}
  if(e.target.closest('#hcOpenChannels')||e.target.closest('#hcOpenChannelsBottom')||e.target.closest('#hcJumpChannels')||e.target.closest('#hcOpenVideos')){setMode(false);var channelButton=document.querySelector('[data-nav="channels"]');if(channelButton)channelButton.click();else{var homeButton=document.querySelector('[data-nav="home"]');if(homeButton)homeButton.click();}return;}
@@ -348,6 +315,5 @@ document.addEventListener('click',function(e){
  if(e.target.closest('[data-reset-dhikr="all"]')){dhikrCounts={};refreshCounts();return;}
 },false);
 document.addEventListener('input',function(e){if(e.target&&e.target.id==='hcHadithSearch'){hadithFilter=e.target.value;renderHadiths();return;}if(e.target&&(e.target.id==='hcNoteTitle'||e.target.id==='hcNoteBody')){hcHandleNoteInput(e.target);}});
-document.addEventListener('keydown',function(e){if(e.target&&e.target.id==='hcAiPrompt'&&e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();hcAskAI();}});
 document.addEventListener('click',function(e){if(e.target.closest('button,.hc-btn,.bottom-nav .nav-item'))playClick();},true);
 })();
