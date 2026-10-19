@@ -84,3 +84,29 @@
 .hc-notes-empty p{font-size:12px;line-height:1.8;color:var(--hc-muted)}.hc-channels-card .hc-actions{margin-top:12px}
 @media(max-width:760px){.hc-notes-layout{grid-template-columns:1fr}.hc-notes-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.hc-note-item{min-width:0}.hc-ai-heading{align-items:flex-start;flex-direction:column}}
 @media(max-width:460px){.hc-notes-sidebar,.hc-notes-editor,.hc-ai-panel{padding:11px}.hc-notes-list{grid-template-columns:1fr}.hc-note-title-row{align-items:stretch;flex-direction:column}.hc-note-title-row .hc-btn{align-self:flex-end}.hc-ai-compose{grid-template-columns:1fr}.hc-ai-compose .hc-btn{min-height:44px}.hc-ai-message.user{margin-inline-start:4%}}
+
+
+/* Halal Community: light knowledge-community redesign */
+:root{color-scheme:light;--hc-bg:#f5f8fc;--hc-ink:#25394e;--hc-muted:#728398;--hc-teal:#238f85}
+body{background:#f5f8fc;color:#25394e}
+.app{background:#f5f8fc!important;color:#25394e!important}
+.topbar{background:#ffffffed!important;border-bottom:1px solid #e3eaf1!important;color:#25394e!important}
+.brandname{color:#25394e!important}.brandhint{color:#7d8da0!important}
+.status-pill,.soft-button,.icon-button{background:#fff!important;color:#42566d!important;border-color:#dce6ef!important}
+.app.community-mode #communityHub{background:#f5f8fc!important;color:#25394e!important}
+#communityHub{background:#f5f8fc!important;color:#25394e!important}
+.hc-hero{background:linear-gradient(120deg,#e2f4f0,#edf0fc 57%,#fff3e7)!important;border:1px solid #e0eaf0!important;box-shadow:0 14px 36px #314d650b!important}
+.hc-title,.hc-heading,.hc-hero h1,.hc-card h3,.hc-notes-editor h3{color:#25394e!important}
+.hc-desc,.hc-sub,.hc-hero p,.hc-card p,.hc-ai-privacy,.hc-ai-empty,.hc-book p{color:#718397!important}
+.hc-card,.hc-notes-sidebar,.hc-notes-editor,.hc-quran,.hc-hadith-card,.hc-channels-card{background:#fff!important;color:#25394e!important;border-color:#e1e9f0!important;box-shadow:0 8px 24px #314d6508!important}
+.hc-input,.hc-note-body,.hc-note-title{background:#fbfdff!important;color:#25394e!important;border-color:#dfe8ef!important}
+.hc-note-item,.hc-tab,.hc-choice{background:#f6f9fc!important;color:#344c60!important;border-color:#e1e9ef!important}
+.hc-jumpbar a{background:#fff!important;color:#3f6678!important;border-color:#dce7ed!important}
+.bottom-nav{background:#ffffffed!important;border-top:1px solid #dfe7ef!important;box-shadow:0 -8px 25px #314d6509!important}
+.bottom-nav .nav-item{color:#718397!important}.bottom-nav .nav-item.active{color:#238f85!important}
+.hc-books-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:15px}
+.hc-book-card{display:flex;align-items:flex-start;gap:14px;padding:17px;background:#fff;border:1px solid #e1e9f0;border-radius:19px;box-shadow:0 8px 24px #314d6508}
+.hc-book-art{width:56px;height:70px;flex:none;display:grid;place-items:center;border-radius:12px 6px 6px 12px;font-size:27px;box-shadow:inset 4px 0 #ffffff70,0 4px 12px #324d6510}
+.hc-book-green{background:linear-gradient(145deg,#e1f5eb,#b5e1c9)}.hc-book-blue{background:linear-gradient(145deg,#e5efff,#c3d8fa)}.hc-book-amber{background:linear-gradient(145deg,#fff0d9,#f3d19d)}.hc-book-purple{background:linear-gradient(145deg,#f1e8ff,#d7c4f3)}
+.hc-book-info{min-width:0;flex:1}.hc-book-tag{display:inline-block;background:#edf7f5;color:#39877f;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}.hc-book-info h3{font-size:16px;margin:9px 0 6px;color:#273d51}.hc-book-info p{font-size:11px;line-height:1.85;margin:0 0 11px;color:#74869a}.hc-book-actions{display:flex;gap:8px;flex-wrap:wrap}.hc-book-actions a{display:inline-flex;align-items:center;text-decoration:none;background:#f0f7f6;color:#267f78;border:1px solid #dbeee9;border-radius:10px;padding:8px 10px;font-size:10px;font-weight:800}.hc-book-actions a:hover{background:#e1f5ef}.hc-books-note{font-size:10px;color:#8594a5;line-height:1.8;margin-top:13px}
+@media(max-width:700px){.hc-books-grid{grid-template-columns:1fr;gap:10px}.hc-book-card{padding:14px;gap:12px}.hc-book-art{width:49px;height:62px}.hc-book-info h3{font-size:14px}}
