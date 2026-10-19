@@ -46,3 +46,41 @@
 .hc-reader-foot{margin-top:18px;padding-top:13px;border-top:1px solid var(--hc-line);font-size:11px;color:var(--hc-muted)}
 @media(max-width:760px){.hc-track-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hc-audio-panel{grid-column:1/-1!important}.hc-reader-overlay{padding:10px}.hc-reader-dialog{max-height:92vh;border-radius:18px}}
 @media(max-width:460px){.hc-track-grid{grid-template-columns:minmax(0,1fr)}.hc-track{padding:12px}.hc-track-play{width:100%}.hc-audio-actions .hc-btn{flex:1;justify-content:center}}
+
+
+/* Focused Halal Community: notes + per-note AI assistant */
+.hc-notes-layout{display:grid;grid-template-columns:minmax(205px,.62fr) minmax(0,1.7fr);gap:14px;align-items:start}
+.hc-notes-sidebar,.hc-notes-editor,.hc-ai-panel{min-width:0;border:1px solid var(--hc-line);border-radius:20px;background:rgba(17,26,42,.88);padding:15px}
+.hc-note-new{width:100%;justify-content:center;margin:0 0 12px}
+.hc-notes-list{display:flex;flex-direction:column;gap:8px}
+.hc-note-item{width:100%;text-align:right;border:1px solid var(--hc-line);border-radius:13px;padding:11px;background:rgba(255,255,255,.025);color:var(--hc-ink);font:inherit;cursor:pointer}
+.hc-note-item.active{border-color:rgba(100,234,209,.55);background:rgba(100,234,209,.08)}
+.hc-note-item strong,.hc-note-item span{display:block;overflow:hidden;text-overflow:ellipsis}
+.hc-note-item strong{font-size:13px;margin-bottom:5px}
+.hc-note-item span,.hc-notes-list-empty,.hc-mini-note{font-size:11px;line-height:1.8;color:var(--hc-muted)}
+.hc-notes-list-empty{padding:12px}.hc-notes-main{min-width:0}
+.hc-note-title-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.hc-note-title{font-size:17px!important;font-weight:800}.hc-note-title-row .hc-input{min-width:0}
+.hc-note-body{width:100%;min-height:220px;resize:vertical;line-height:1.95;font-size:14px!important}
+.hc-note-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 16px}
+.hc-btn.danger{border-color:rgba(255,125,125,.25);color:#ffb4b4}
+.hc-ai-panel{background:linear-gradient(145deg,rgba(129,106,255,.08),rgba(100,234,209,.035)),#101725;padding:15px;margin-top:10px}
+.hc-ai-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hc-ai-heading h3{margin:3px 0 4px;font-size:18px}.hc-ai-heading p{margin:0;color:var(--hc-muted);font-size:11px;line-height:1.7}
+.hc-ai-eyebrow{font-size:9px;letter-spacing:1.5px;color:var(--hc-teal);font-weight:900}
+.hc-ai-privacy{font-size:10px;line-height:1.8;color:var(--hc-muted);padding:10px 0;border-bottom:1px solid var(--hc-line);margin-bottom:11px}
+.hc-ai-quick-actions{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.hc-ai-quick-actions .hc-tab{font-size:11px;padding:8px 10px}
+.hc-ai-messages{display:flex;flex-direction:column;gap:10px;max-height:440px;overflow:auto;padding:4px 1px 10px}
+.hc-ai-empty{margin:0;border:1px dashed var(--hc-line);border-radius:13px;padding:15px;color:var(--hc-muted);font-size:12px;line-height:1.8}
+.hc-ai-message{border:1px solid var(--hc-line);border-radius:14px;padding:12px;max-width:100%}
+.hc-ai-message.user{background:rgba(100,234,209,.055);margin-inline-start:10%}.hc-ai-message.assistant{background:rgba(169,154,255,.065);margin-inline-end:5%}
+.hc-ai-role{font-size:10px;color:var(--hc-teal);font-weight:900;margin-bottom:6px}.hc-ai-message.assistant .hc-ai-role{color:#c0b4ff}
+.hc-ai-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.9}
+.hc-ai-use{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.hc-ai-use .hc-tab{font-size:10px;padding:7px 9px}
+.hc-ai-compose{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:end}
+.hc-ai-compose .hc-input{width:100%;min-width:0;resize:vertical}.hc-ai-compose .hc-btn{align-self:stretch;justify-content:center}
+.hc-quran-wrap{margin-top:16px}.hc-notes-empty{text-align:center;padding:30px 18px}
+.hc-notes-empty .hc-icon{margin:0 auto 14px}.hc-notes-empty h3{margin:0 0 7px}
+.hc-notes-empty p{font-size:12px;line-height:1.8;color:var(--hc-muted)}.hc-channels-card .hc-actions{margin-top:12px}
+@media(max-width:760px){.hc-notes-layout{grid-template-columns:1fr}.hc-notes-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.hc-note-item{min-width:0}.hc-ai-heading{align-items:flex-start;flex-direction:column}}
+@media(max-width:460px){.hc-notes-sidebar,.hc-notes-editor,.hc-ai-panel{padding:11px}.hc-notes-list{grid-template-columns:1fr}.hc-note-title-row{align-items:stretch;flex-direction:column}.hc-note-title-row .hc-btn{align-self:flex-end}.hc-ai-compose{grid-template-columns:1fr}.hc-ai-compose .hc-btn{min-height:44px}.hc-ai-message.user{margin-inline-start:4%}}
