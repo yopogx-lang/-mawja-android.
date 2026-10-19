@@ -1,5 +1,5 @@
 /* Offline shell only. YouTube playback still requires internet. */
-const CACHE_NAME = 'halal-community-shell-v10';
+const CACHE_NAME = 'halal-community-shell-v11';
 const SHELL_URLS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './community.css', './community.js'];
 
 self.addEventListener('install', event => {
