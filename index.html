@@ -90,14 +90,11 @@
 (() => {
   'use strict';
   const CHANNEL_DEFAULTS = [
-    {id:'anas',name:'أنس أكشن',handle:'@anasaction-tv',searchTerm:'أنس أكشن',category:'ترفيه',letter:'أ',color:'linear-gradient(145deg,#ff9c78,#ce5877)'},
-    {id:'mahmoud',name:'محمود الدرة',handle:'@MahmoudEldorra',searchTerm:'محمود الدرة Mahmoud Eldorra',category:'لياقة',letter:'م',color:'linear-gradient(145deg,#9c86ff,#5666d8)'},
-    {id:'huberman',name:'Huberman Lab',handle:'@hubermanlab',searchTerm:'Huberman Lab',category:'بودكاست',letter:'H',color:'linear-gradient(145deg,#83d7c8,#387f8a)'},
-    {id:'village',name:'قرية العجائب',handle:'@badr3',searchTerm:'قرية العجائب بدر العلوي',category:'قصص وغموض',letter:'ع',color:'linear-gradient(145deg,#e9bc78,#b96c4d)'},
-    {id:'amgad',name:'الشيخ أمجد سمير',handle:'@amgad_samir',searchTerm:'الشيخ أمجد سمير',category:'علم ووعي',letter:'أ',color:'linear-gradient(145deg,#83a9ff,#555eb9)'},
-    {id:'markiplier',name:'Markiplier',handle:'@markiplier',searchTerm:'Markiplier',category:'Gaming',letter:'M',color:'linear-gradient(145deg,#ff8b78,#b83a56)'}
-  ];
-  const KEY = {api:'mawja_api_key_v1',channels:'mawja_channels_v1',meta:'mawja_meta_v1',videos:'mawja_videos_v1',saved:'mawja_saved_v1',sync:'mawja_sync_v1',token:'mawja_tokens_v1'};
+    {id:'enactus',name:'Enactus Egypt',handle:'Enactus Egypt',searchTerm:'Enactus Egypt official',category:'تنمية ومجتمع',letter:'E',color:'linear-gradient(145deg,#77c9a6,#27876f)'},
+    {id:'amgad',name:'الشيخ أمجد سمير',handle:'الشيخ أمجد سمير',searchTerm:'القناة الرسمية الشيخ أمجد سمير',category:'دعوة ووعي',letter:'أ',color:'linear-gradient(145deg,#83a9ff,#555eb9)'},
+    {id:'shaarawy',name:'الشيخ محمد متولي الشعراوي',handle:'الشيخ الشعراوي',searchTerm:'القناة الرسمية الشيخ محمد متولي الشعراوي',category:'تفسير القرآن',letter:'ش',color:'linear-gradient(145deg,#c6a2e9,#8863b4)'},
+    {id:'mustafa',name:'الدكتور مصطفى محمود',handle:'الدكتور مصطفى محمود',searchTerm:'القناة الرسمية الدكتور مصطفى محمود',category:'فكر ومعرفة',letter:'م',color:'linear-gradient(145deg,#edc78d,#b77b43)'}
+  ];  const KEY = {api:'mawja_api_key_v1',channels:'mawja_channels_v1',meta:'mawja_meta_v1',videos:'mawja_videos_v1',saved:'mawja_saved_v1',sync:'mawja_sync_v1',token:'mawja_tokens_v1'};
   const safeRead = (k, fallback) => { try { const v = localStorage.getItem(k); return v === null ? fallback : JSON.parse(v); } catch { return fallback; } };
   const safeWrite = (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { toast('مساحة التخزين ممتلئة؛ امسح بعض البيانات من المتصفح.','error'); return false; } };
   const customChannels = safeRead(KEY.channels, {});
