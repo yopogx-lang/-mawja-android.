@@ -110,3 +110,7 @@ body{background:#f5f8fc;color:#25394e}
 .hc-book-green{background:linear-gradient(145deg,#e1f5eb,#b5e1c9)}.hc-book-blue{background:linear-gradient(145deg,#e5efff,#c3d8fa)}.hc-book-amber{background:linear-gradient(145deg,#fff0d9,#f3d19d)}.hc-book-purple{background:linear-gradient(145deg,#f1e8ff,#d7c4f3)}
 .hc-book-info{min-width:0;flex:1}.hc-book-tag{display:inline-block;background:#edf7f5;color:#39877f;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}.hc-book-info h3{font-size:16px;margin:9px 0 6px;color:#273d51}.hc-book-info p{font-size:11px;line-height:1.85;margin:0 0 11px;color:#74869a}.hc-book-actions{display:flex;gap:8px;flex-wrap:wrap}.hc-book-actions a{display:inline-flex;align-items:center;text-decoration:none;background:#f0f7f6;color:#267f78;border:1px solid #dbeee9;border-radius:10px;padding:8px 10px;font-size:10px;font-weight:800}.hc-book-actions a:hover{background:#e1f5ef}.hc-books-note{font-size:10px;color:#8594a5;line-height:1.8;margin-top:13px}
 @media(max-width:700px){.hc-books-grid{grid-template-columns:1fr;gap:10px}.hc-book-card{padding:14px;gap:12px}.hc-book-art{width:49px;height:62px}.hc-book-info h3{font-size:14px}}
+
+
+.channel-official-link{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;text-decoration:none;background:#e8f6f2;border:1px solid #d2ece5;color:#247e74;border-radius:10px;padding:7px 10px;font-size:10px;font-weight:850;position:relative;z-index:2}
+.channel-official-link:hover{background:#dff3ed}
