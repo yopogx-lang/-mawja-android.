@@ -173,8 +173,8 @@ root.innerHTML=`
     <div class="hc-kicker">HALAL COMMUNITY · مساحة شخصية</div>
     <h1 class="hc-title">مكانك للذكر<br><span>والتعلّم والكتابة</span></h1>
     <p class="hc-desc">مساحة هادئة تجمع قنواتك، والقرآن والأذكار والأحاديث، ونوتس خاصة تحتفظ بأفكارك وملاحظاتك على جهازك.</p>
-    <div class="hc-actions"><a class="hc-btn primary" href="#hcNotes">افتح النوتس ✎</a><a class="hc-btn purple" href="#hcSpiritual">الأذكار والقرآن ☾</a><button class="hc-btn" id="hcOpenChannels" type="button">افتح القنوات ↗</button></div>
-    <div class="hc-pill-row"><span class="hc-pill">✦ نوتس تُحفظ على جهازك</span><span class="hc-pill">✦ نوتس لأفكارك</span><span class="hc-pill">✦ قرآن وأذكار وأحاديث</span></div>
+    <div class="hc-actions"><a class="hc-btn primary" href="#hcNotes">افتح النوتس ✎</a><a class="hc-btn purple" href="#hcSpiritual">الأذكار والقرآن ☾</a><a class="hc-btn" href="#hcBooks">مكتبة الكتب 📚</a><button class="hc-btn" id="hcOpenChannels" type="button">افتح القنوات ↗</button></div>
+    <div class="hc-pill-row"><span class="hc-pill">✦ نوتس تُحفظ على جهازك</span><span class="hc-pill">✦ مكتبة كتب إسلامية</span><span class="hc-pill">✦ قرآن وأذكار وأحاديث</span></div>
   </div><div class="hc-hero-art"><div class="hc-orbit"><div class="hc-moon"></div><div class="hc-core"><b>☾</b><span>WRITE · REFLECT · GROW</span></div></div></div>
 </section>
 <nav class="hc-jumpbar" aria-label="أقسام المجتمع"><a href="#hcNotes">✎ النوتس والمساعد</a><a href="#hcSpiritual">☾ الأذكار والقرآن</a><a href="#hcHadith">📜 الأحاديث</a><a href="#hcChannels" id="hcJumpChannels">▶ القنوات</a></nav>
@@ -212,7 +212,7 @@ root.innerHTML=`
   <div class="hc-section-head"><div><h2 class="hc-heading">أحاديث للتذكّر 📜</h2><div class="hc-sub">ابحث في مجموعة الأحاديث وافتح المصدر للتحقق من النص والسياق.</div></div><span class="hc-count" id="hcHadithCount">50 حديث</span></div>
   <div class="hc-hadith-tools"><input class="hc-input" id="hcHadithSearch" placeholder="ابحث في نص الحديث أو المصدر…"><button class="hc-btn" id="hcHadithClear" type="button">عرض الكل ↻</button></div><div class="hc-hadith-list" id="hcHadithList"></div>
 </section>
-<section class="hc-section" id="hcChannels"><div class="hc-card hc-channels-card"><div class="hc-card-top"><div><h2 class="hc-heading">قنواتك ومكتبة الفيديوهات ▶</h2><div class="hc-sub">القنوات والمحفوظات والمشغّل الأصلي متاحون من تبويبات الموقع الرئيسية.</div></div><div class="hc-icon">▶</div></div><div class="hc-actions"><button class="hc-btn primary" id="hcOpenChannelsBottom" type="button">افتح القنوات ↗</button><button class="hc-btn" id="hcOpenVideos" type="button">افتح مكتبة الفيديوهات ↗</button></div></div></section>
+<section class="hc-section" id="hcChannels"><div class="hc-card hc-channels-card"><div class="hc-card-top"><div><h2 class="hc-heading">قنواتك ومكتبة الفيديوهات ▶</h2><div class="hc-sub">القنوات الأربع التي اخترتها متاحة من تبويب القنوات في الموقع.</div></div><div class="hc-icon">▶</div></div><div class="hc-actions"><button class="hc-btn primary" id="hcOpenChannelsBottom" type="button">افتح القنوات ↗</button><button class="hc-btn" id="hcOpenVideos" type="button">افتح مكتبة الفيديوهات ↗</button></div></div></section>
 <footer class="hc-footer"><span>Halal Community · نوتس وذكر وقنوات</span><span>النوتس محفوظة على هذا الجهاز والمتصفح.</span></footer>
 `;
 
